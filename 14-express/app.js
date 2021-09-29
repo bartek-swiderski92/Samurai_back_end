@@ -6,11 +6,7 @@ app.listen(3000, () => {
     console.log('Server is listening at http://localhost:3000');
 });
 
-app.get('/', () => {
-    console.log('Hello, World!');
+app.get('/', (req) => {
+    console.log('req.protocol', req.protocol);
+    console.log('req.secure', req.secure);
 });
-
-app.get('/hi', () => {
-    console.log('Hi, World!');
-});
-
