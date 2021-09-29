@@ -1,0 +1,1 @@
+console.log('czytam z pliku1');
