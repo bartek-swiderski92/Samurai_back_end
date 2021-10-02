@@ -1,10 +1,10 @@
-const express = require('express');
-const path = require('path');
-const app = express();
+// const express = require('express');
+// const path = require('path');
+// const app = express();
 
-app.listen(3000, () => {
-    console.log('Server is listening at http://localhost:3000');
-});
+// app.listen(3000, () => {
+//     console.log('Server is listening at http://localhost:3000');
+// });
 
 // app.get('/', (req) => {
 // const { name, surname} = req.query
@@ -85,19 +85,79 @@ app.listen(3000, () => {
 //     res.redirect(`back`)
 // });
 
-app.get('/', (req, res) => {
-    const fileName = 'index.html';
-    res.sendFile(fileName, {
-        root: path.join(__dirname, 'static')
-    })
-})
-app.get('/logo', (req, res) => {
-    // const fileName = path.join(__dirname, 'static/logo.jpg');
-    // res.sendFile(fileName);
+// app.get('/', (req, res) => {
+//     const fileName = 'index.html';
+//     res.sendFile(fileName, {
+//         root: path.join(__dirname, 'static')
+//     })
+// })
+// app.get('/logo', (req, res) => {
+//     // const fileName = path.join(__dirname, 'static/logo.jpg');
+//     // res.sendFile(fileName);
 
-    const fileName = 'logo.jpg';
-    res.sendFile(fileName, {
-        root: path.join(__dirname, 'static')
-        // lastModified: false
-    })
-})
+//     const fileName = 'logo.jpg';
+//     res.sendFile(fileName, {
+//         root: path.join(__dirname, 'static')
+//         // lastModified: false
+//     })
+// })
+
+// app.get('/', (req, res) => {
+//     res.send('Strona Główna')
+// })
+
+// app.get('/hi/:name', (req, res) => {
+
+//     const {
+//         name
+//     } = req.params
+
+//     const dt = new Date();
+//     dt.setDate(dt.getDate() + 7);
+
+//     res.cookie('visitor_name', name, {
+//         // expires: dt,
+//             maxAge: 5 * 60 * 1000,
+//     });
+
+//     res.send('Imię zapisano.')
+// })
+
+// app.get('/logout', (req, res) => {
+//     res.clearCookie('visitor_name');
+
+//     res.redirect('/')
+// })
+
+
+// Middleware
+
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser')
+
+const app = express();
+
+app.listen(3000, () => {
+    console.log('Server is listening at http://localhost:3000');
+});
+
+app.use(express.json());
+app.use(express.static(
+    path.join(__dirname, 'static')
+))
+app.use(cookieParser());
+
+// app.get('/', (req, res) => {
+//     res.end()
+// });
+
+// app.post('/hello', (req, res) => {
+//     console.log(req.body);
+//     const {
+//         name,
+//         surname
+//     } = req.body;
+
+//     res.send(`Witaj ${name} ${surname}`)
+// })
