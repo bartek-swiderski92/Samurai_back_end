@@ -1,8 +1,5 @@
 const question = document.querySelector('#question')
-// const answer1 = document.querySelector('#answer1')
-// const answer2 = document.querySelector('#answer2')
-// const answer3 = document.querySelector('#answer3')
-// const answer4 = document.querySelector('#answer4')
+
 const gameBoard = document.querySelector('#game-board')
 const h2 = document.querySelector('h2')
 
@@ -12,11 +9,12 @@ function fillQuestionElements(data) {
         h2.innerText = 'Wygrana!!!';
         return
     }
+    if (data.loser === true) {
+        gameBoard.style.display = 'none';
+        h2.innerText = 'Niestety, spróbuj ponownie!';
+        return
+    }
     question.innerText = data.question;
-    // answer1.innerText = data.answers[0];
-    // answer2.innerText = data.answers[1];
-    // answer3.innerText = data.answers[2];
-    // answer4.innerText = data.answers[3];
 
     for (const i in data.answers) {
         const answerEl = document.querySelector(`#answer${Number(i)+1}`);
@@ -53,7 +51,7 @@ function sendANswer(answerIndex) {
         });
 }
 
-const buttons = document.querySelectorAll('button');
+const buttons = document.querySelectorAll('button.answer-btn');
 for (const button of buttons) {
 
     button.addEventListener('click', (event) => {
@@ -63,3 +61,71 @@ for (const button of buttons) {
 
     })
 }
+
+const tipDiv = document.querySelector('#tip')
+
+function handleFriendsAnswer(data) {
+    tipDiv.innerText = data.text
+}
+
+function callAFriend() {
+    fetch('/help/friend', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            handleFriendsAnswer(data);
+        });
+}
+
+document.querySelector('#callAFriend').addEventListener('click', callAFriend);
+
+
+
+function handleHalfOfHalfAnswer(data) {
+    if (typeof data.text === 'string') {
+        tipDiv.innerText = data.text;
+    } else {
+        for (const button of buttons) {
+            if (data.answersToRemove.indexOf(button.innerText) > -1) {
+                button.innerText = '';
+            }
+        }
+    }
+}
+
+function halfOfHalf() {
+    fetch('/help/half', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            handleHalfOfHalfAnswer(data);
+        });
+}
+
+document.querySelector('#halfOfHalf').addEventListener('click', halfOfHalf);
+
+
+
+function handleCrowdAnswer(data) {
+    if (typeof data.text === 'string') {
+        tipDiv.innerText = data.text;
+    } else {
+        data.chart.forEach((percent, index) => {
+            buttons[index].innerText = `${buttons[index].innerText}:${percent}%`;
+        });
+    }
+}
+
+function questionToTheCrowd() {
+    fetch('/help/crowd', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            handleCrowdAnswer(data);
+        });
+}
+
+document.querySelector('#questionToTheCrowd').addEventListener('click', questionToTheCrowd)
